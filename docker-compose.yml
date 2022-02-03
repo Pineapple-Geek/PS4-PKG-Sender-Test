@@ -6,10 +6,10 @@ services:
     volumes:
       - ./files:/opt/apps/pkg_sender/files
     ports:
-      - 3333:8080
+      - 3333:8033
     environment:
-      - PORT=8080
+      - PORT=8033
       - STATIC_FILES=/opt/apps/pkg_sender/files
-      - LOCALIP=192.168.0.2
-      - PS4IP=192.168.0.100
+      - LOCALIP=192.168.61.101
+      - PS4IP=192.168.61.219
     restart: unless-stopped
