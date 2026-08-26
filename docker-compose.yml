@@ -1,6 +1,7 @@
 version: "2"
 services:
   docker-ps4-pkg-sender:
+    build: .
     container_name: docker-ps4-pkg-sender
     environment:
       - PORT=7777
