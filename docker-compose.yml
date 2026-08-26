@@ -1,7 +1,6 @@
 version: "2"
 services:
   docker-ps4-pkg-sender:
-    image: fabulosodev/docker-ps4-pkg-sender:latest
     container_name: docker-ps4-pkg-sender
     environment:
       - PORT=7777
