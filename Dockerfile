@@ -1,6 +1,6 @@
 FROM node:8
 
-WORKDIR /opt/apps/pkg_sender
+WORKDIR /opt/apps/pkg_sender_test
 
 COPY package.json package.json
 RUN npm install
