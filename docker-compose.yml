@@ -6,8 +6,8 @@ services:
     environment:
       - PORT=7777
       - STATIC_FILES=/pkg_sender/files
-      - LOCALIP=localhost
-      - PS4IP=ps4.ip
+      - LOCALIP=192.168.0.104
+      - PS4IP=192.168.0.102
     restart: unless-stopped
     ports:
       - 7777:7777
