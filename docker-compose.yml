@@ -2,7 +2,7 @@ version: "2"
 services:
   pkg_sender_test:
     build: .
-    container_name: pkg_sender_test
+    container_name: ps4-pkg_sender_test
     volumes:
       - ./files:/opt/apps/pkg_sender_test/files
       - /srv/dev-disk-by-uuid-820dec2c-37a0-45b3-af55-34fb34afe767/:/HDD1
