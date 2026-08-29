@@ -96,7 +96,7 @@ function get_pkgs() {
       } else if (path.extname(file).toLowerCase() === '.pkg') {
         let relativePath = path.relative(static_files_path, filepath).replace(/\\/g, '/');
         let newFilepath = 'pkg_sender/' + relativePath;
-        let dirname = path.dirname(newFilepath).replace('pkg_sender/', '');
+        let dirname = path.dirname(newFilepath).replace('/pkg_sender/', '');
         let root = dirname.split("/", 1)[0];
         console.log("dirname: " + dirname);
         console.log("root: " + root);
