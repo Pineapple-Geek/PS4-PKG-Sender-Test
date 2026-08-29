@@ -4,15 +4,12 @@ services:
     build: .
     container_name: docker-ps4-pkg-sender
     environment:
-      - PORT=7777
+      - PORT=3333
       - STATIC_FILES=/pkg_sender/files
       - LOCALIP=192.168.0.104
       - PS4IP=192.168.0.102
     restart: unless-stopped
     ports:
-      - 7777:7777
+      - 3333:8080
     volumes:
-      - ./files:/pkg_sender/files
-      - /srv/dev-disk-by-uuid-820dec2c-37a0-45b3-af55-34fb34afe767/:/HDD1
-      - /srv/dev-disk-by-uuid-b3ad2233-4667-446a-b212-d28e547d6fb2/:/HDD2
-      - /srv/dev-disk-by-uuid-1913d119-ecc4-41e4-b936-348064e82870/:/HDD3
+      - /srv/PS4Unified:/app/files
