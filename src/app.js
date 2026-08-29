@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const { exec } = require('child_process');
 
 const port = process.env.PORT ?? 3333;
-const static_files_path = process.env.STATIC_FILES ?? './files';
+const static_files_path = process.env.STATIC_FILES ?? '/pkg_sender/files';
 const ps4_ip = process.env.PS4IP ?? 'localhost';
 const local_ip = process.env.LOCALIP ?? 'localhost';
 
