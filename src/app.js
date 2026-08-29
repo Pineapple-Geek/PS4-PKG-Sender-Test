@@ -95,7 +95,7 @@ function get_pkgs() {
         filelist = walkSync(filepath, filelist);
       } else if (path.extname(file).toLowerCase() === '.pkg') {
         let relativePath = path.relative(static_files_path, filepath).replace(/\\/g, '/');
-        let newFilepath = 'pkg_sender/' + relativePath;
+        let newFilepath = '/pkg_sender/' + relativePath;
         let dirname = path.dirname(newFilepath).replace('/pkg_sender/', '');
         let root = dirname.split("/", 1)[0];
         console.log("dirname: " + dirname);
