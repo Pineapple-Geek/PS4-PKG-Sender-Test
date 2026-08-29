@@ -7,10 +7,10 @@ const filesize = require('filesize');
 const crypto = require('crypto');
 const { exec } = require('child_process');
 
-const port = process.env.PORT;
-const static_files_path = process.env.STATIC_FILES;
-const ps4_ip = process.env.PS4IP;
-const local_ip = process.env.LOCALIP;
+const port = process.env.PORT ?? 3333;
+const static_files_path = process.env.STATIC_FILES ?? './files';
+const ps4_ip = process.env.PS4IP ?? 'localhost';
+const local_ip = process.env.LOCALIP ?? 'localhost';
 
 const app = express();
 
