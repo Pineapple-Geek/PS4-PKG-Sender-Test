@@ -111,9 +111,9 @@ function get_pkgs() {
 // INSTALLATION PS4
 // ------------------------------------------------------------
 function ps4_install(filename, res) {
-  const pkg_uri = `http://${local_ip}:${port}/${encodeURIComponent(filename)}`;
+  const pkg_uri = `http://${local_ip}:${port}/${encodeURI(filename)}`;
   const ps4_api_uri = `http://${ps4_ip}:12800/api/install`;
-  const curl_command = `curl -v "${ps4_api_uri}" -H "Content-Type: application/json" --data '{"type":"direct","packages":["${pkg_uri}"]}'`;
+  const curl_command = `curl -v "${ps4_api_uri}" --data '{"type":"direct","packages":["${pkg_uri}"]}'`;
 
   res.write(curl_command + "\n");
   console.log(curl_command);
