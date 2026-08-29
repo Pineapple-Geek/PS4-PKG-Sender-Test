@@ -4,7 +4,6 @@ const mustache_express = require('mustache-express');
 const path = require('path');
 const fs = require('fs');
 const filesize = require('filesize');
-const crypto = require('crypto');
 const { exec } = require('child_process');
 
 const port = process.env.PORT;
@@ -15,15 +14,14 @@ const local_ip = process.env.LOCALIP;
 const app = express();
 
 app.use(morgan('combined'));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded());
 
 app.engine('html', mustache_express());
 app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 
 app.get('/', function (req, res) {
-  var dirs = flatten_pkgs(get_pkgs());
-  res.render('index', {"dirs": dirs});
+  res.render('index', {"pkgs": get_pkgs()});
 });
 app.post('/install', function(req, res) {
   const filepath = req.body.filepath;
@@ -38,13 +36,13 @@ app.listen(port, function () {
   console.log(`PS4 PKG sender listening on port ${port} serving files from ${static_files_path}`);
 });
 
-function flatten_pkgs() {
+function get_dirs_with_pkgs() {
   const pkgs = get_pkgs();
-  var flattend = [];
-  Object.keys(pkgs).forEach(function(root) {
-    flattend.push({id: crypto.randomUUID(), root:root, pkgs: pkgs[root]})
-  });
-  return flattend;
+  const dirs = {};
+  for(var i = 0, l = pkgs.length; i < l; ++i){
+    dirs[pkgs[i].dir] = true;
+  }
+  return Object.keys(dirs);
 }
 
 function get_pkgs() {
@@ -56,13 +54,9 @@ function get_pkgs() {
       if (stat.isDirectory()) {
         filelist = walkSync(filepath, filelist);
       } else if (path.extname(file).toLowerCase() === '.pkg') {
-        let dirname = path.dirname(filepath).replace(static_files_path + '/', '')
-        let root = dirname.split("/", 1)[0];
-        if (!filelist[root])
-          filelist[root] = [];
-        filelist[root].push({
+        filelist.push({
           filepath: filepath,
-          dir: dirname.replace(root + '/', ''),
+          dir: path.dirname(filepath),
           name: path.basename(filepath),
           size: filesize(stat.size)
         });
@@ -70,7 +64,7 @@ function get_pkgs() {
     });
     return filelist;
   };
-  return walkSync(static_files_path, {});
+  return walkSync(static_files_path, []);
 }
 
 function ps4_install(filename, res) {
@@ -81,8 +75,8 @@ function ps4_install(filename, res) {
   console.log(curl_command);
   exec(curl_command, (err, stdout, stderr) => {
     if (err) {
-      res.write(`\n`);
-      res.end(`error: ${JSON.stringify(err)}`);
+      res.write(err);
+      res.end();
       console.error(err);
       return;
     }
