@@ -1,10 +1,17 @@
 <ul>
   {{#pkgs}}
   <li>
-    <form action="/install" method="post" style="margin-bottom: 0">
-      <input type="hidden" name="filepath" value="{{filepath}}">
-      <input type="submit" value="{{name}} ({{size}})">
-    </form>
+    <form action="/install" method="post">
+										<input type="hidden" name="filepath" value="{{filepath}}">
+										<td>{{dir}}</td>
+										<td>{{name}}</td>
+										<td>{{size}}</td>
+										<td>
+											<button type="submit" class="btn btn-primary">
+												<i class="fa-solid fa-cloud-arrow-down"></i> INSTALL
+											</button>
+										</td>
+									</form>
   </li>
   {{/pkgs}}
 </ul>
