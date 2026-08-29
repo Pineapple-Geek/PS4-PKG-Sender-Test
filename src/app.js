@@ -75,7 +75,7 @@ function ps4_install(filename, res) {
   console.log(curl_command);
   exec(curl_command, (err, stdout, stderr) => {
     if (err) {
-      res.write(err);
+      res.write(err.message);
       res.end();
       console.error(err);
       return;
