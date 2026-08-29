@@ -41,45 +41,6 @@ app.post('/install', (req, res) => {
 });
 
 // ------------------------------------------------------------
-// SERVEUR DE FICHIERS COMPATIBLE PS4 (Range + streaming)
-// ------------------------------------------------------------
-app.get('/:filename', (req, res) => {
-  const filePath = path.join(static_files_path, req.params.filename);
-
-  fs.stat(filePath, (err, stats) => {
-    if (err) {
-      return res.status(404).end();
-    }
-
-    const range = req.headers.range;
-
-    // --- Pas de Range → envoi normal ---
-    if (!range) {
-      res.writeHead(200, {
-        'Content-Length': stats.size,
-        'Content-Type': 'application/octet-stream',
-        'Accept-Ranges': 'bytes'
-      });
-      return fs.createReadStream(filePath).pipe(res);
-    }
-
-    // --- Avec Range → streaming partiel ---
-    const [startStr, endStr] = range.replace(/bytes=/, '').split('-');
-    const start = parseInt(startStr, 10);
-    const end = endStr ? parseInt(endStr, 10) : stats.size - 1;
-
-    res.writeHead(206, {
-      'Content-Range': `bytes ${start}-${end}/${stats.size}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': end - start + 1,
-      'Content-Type': 'application/octet-stream'
-    });
-
-    fs.createReadStream(filePath, { start, end }).pipe(res);
-  });
-});
-
-// ------------------------------------------------------------
 // LANCEMENT SERVEUR
 // ------------------------------------------------------------
 app.listen(port, function () {
