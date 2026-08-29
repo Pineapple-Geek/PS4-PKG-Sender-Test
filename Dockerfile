@@ -1,12 +1,14 @@
-FROM node:8
+FROM node:20-slim
 
 WORKDIR /opt/apps/pkg_sender
 
 COPY package.json package.json
 RUN npm install
-#RUN npm install http-server -g
+#RUN apk --no-cache add curl
 
 COPY src src
 COPY bin/run bin/run
 
-CMD ["bin/run"]
+EXPOSE 3333
+
+CMD ["node", "src/app.js"]
