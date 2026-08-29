@@ -1,12 +1,14 @@
 FROM node:20-slim
 
-WORKDIR /pkg_sender
+WORKDIR /opt/apps/pkg_sender
 
 COPY package.json package.json
 RUN npm install
 RUN apk --no-cache add curl
 
-COPY --from=build /pkg_sender /
 COPY src src
+COPY bin/run bin/run
 
-CMD ["npm", "start"]
+EXPOSE 3333
+
+CMD ["node", "src/app.js"]
