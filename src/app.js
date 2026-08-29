@@ -86,19 +86,16 @@ app.listen(port, () => {
 // LISTE DES PKG
 // ------------------------------------------------------------
 function get_pkgs() {
-  const walkSync = function(dir, filelist) {
+  const walkSync = function (dir, filelist) {
     const files = fs.readdirSync(dir);
-    files.forEach(function(file) {
-      filepath = dir + '/' + file;
+    files.forEach(function (file) {
+      const filepath = dir + '/' + file;
       const stat = fs.statSync(filepath);
       if (stat.isDirectory()) {
         filelist = walkSync(filepath, filelist);
       } else if (path.extname(file).toLowerCase() === '.pkg') {
         let dirname = path.dirname(filepath).replace(static_files_path + '/', '')
-        let root = dirname.split("/", 1)[0];
-        if (!filelist[root])
-          filelist[root] = [];
-        filelist[root].push({
+        filelist.push({
           filepath: filepath,
           dir: dirname.replace(root + '/', ''),
           name: path.basename(filepath),
@@ -108,7 +105,7 @@ function get_pkgs() {
     });
     return filelist;
   };
-  return walkSync(static_files_path, {});
+  return walkSync(static_files_path, []);
 }
 
 // ------------------------------------------------------------
