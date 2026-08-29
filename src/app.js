@@ -4,12 +4,13 @@ const mustache_express = require('mustache-express');
 const path = require('path');
 const fs = require('fs');
 const filesize = require('filesize');
+const crypto = require('crypto');
 const { exec } = require('child_process');
 
-const port = process.env.PORT;
-const static_files_path = process.env.STATIC_FILES;
-const ps4_ip = process.env.PS4IP;
-const local_ip = process.env.LOCALIP;
+const port = process.env.PORT ?? 7777;
+const static_files_path = process.env.STATIC_FILES ?? './files';
+const ps4_ip = process.env.PS4IP ?? 'localhost';
+const local_ip = process.env.LOCALIP ?? 'localhost';
 
 const app = express();
 
@@ -23,8 +24,9 @@ app.set('views', __dirname + '/views');
 // ------------------------------------------------------------
 // PAGE PRINCIPALE
 // ------------------------------------------------------------
-app.get('/', (req, res) => {
-  res.render('index', { pkgs: get_pkgs() });
+app.get('/', function (req, res) {
+  var dirs = flatten_pkgs(get_pkgs());
+  res.render('index', {"dirs": dirs});
 });
 
 // ------------------------------------------------------------
@@ -80,28 +82,38 @@ app.get('/:filename', (req, res) => {
 // ------------------------------------------------------------
 // LANCEMENT SERVEUR
 // ------------------------------------------------------------
-app.listen(port, () => {
+app.listen(port, function () {
   console.log(`PS4 PKG sender listening on port ${port} serving files from ${static_files_path}`);
 });
+
+// FLATTEN PKGS
+// ------------------------------------------------------------
+function flatten_pkgs() {
+  const pkgs = get_pkgs();
+  var flattend = [];
+  Object.keys(pkgs).forEach(function(root) {
+    flattend.push({id: crypto.randomUUID(), root:root, pkgs: pkgs[root]})
+  });
+  return flattend;
+}
 
 // ------------------------------------------------------------
 // LISTE DES PKG
 // ------------------------------------------------------------
 function get_pkgs() {
-  const walkSync = function (dir, filelist) {
+  const walkSync = function(dir, filelist) {
     const files = fs.readdirSync(dir);
-    files.forEach(function (file) {
-      const filepath = dir + '/' + file;
+    files.forEach(function(file) {
+      filepath = dir + '/' + file;
       const stat = fs.statSync(filepath);
       if (stat.isDirectory()) {
         filelist = walkSync(filepath, filelist);
       } else if (path.extname(file).toLowerCase() === '.pkg') {
         let dirname = path.dirname(filepath).replace(static_files_path + '/', '')
         let root = dirname.split("/", 1)[0];
-        console.log("dirname: " + dirname);
-        console.log("root: " + root);
-        console.log("filepath: " + filepath);
-        filelist.push({
+        if (!filelist[root])
+          filelist[root] = [];
+        filelist[root].push({
           filepath: filepath,
           dir: dirname.replace(root + '/', ''),
           name: path.basename(filepath),
@@ -111,7 +123,7 @@ function get_pkgs() {
     });
     return filelist;
   };
-  return walkSync(static_files_path, []);
+  return walkSync(static_files_path, {});
 }
 
 // ------------------------------------------------------------
