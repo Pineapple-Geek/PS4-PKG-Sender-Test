@@ -1,14 +1,15 @@
-FROM node:20-slim
+FROM node:20-slim as build
 
-WORKDIR /opt/apps/pkg_sender
+WORKDIR /pkg_sender
 
 COPY package.json package.json
 RUN npm install
+
+FROM node:20-slim
+
 RUN apt update && apt install -y curl
 
+COPY --from=build /pkg_sender /
 COPY src src
-COPY bin/run bin/run
 
-EXPOSE 3333
-
-CMD ["node", "src/app.js"]
+CMD ["npm", "start"]
