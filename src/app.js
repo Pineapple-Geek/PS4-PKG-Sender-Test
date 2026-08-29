@@ -96,6 +96,9 @@ function get_pkgs() {
       } else if (path.extname(file).toLowerCase() === '.pkg') {
         let dirname = path.dirname(filepath).replace(static_files_path + '/', '')
         let root = dirname.split("/", 1)[0];
+        console.log("dirname: " + dirname);
+        console.log("root: " + root);
+        console.log("filepath: " + filepath);
         filelist.push({
           filepath: filepath,
           dir: dirname.replace(root + '/', ''),
